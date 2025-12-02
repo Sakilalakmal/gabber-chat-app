@@ -1,3 +1,4 @@
+import { createStreamUser } from "../lib/stream.js";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 
@@ -41,7 +42,22 @@ export const authControllers = {
         profilePic: randomAvatar,
       });
 
-      await newuser.save();
+      try {
+        await createStreamUser({
+          id: newuser._id.toString(),
+          name: newuser.fullName,
+          image: newuser.profilePic,
+        });
+
+        return res.status(201).json({
+          message: "User added to stream successfully",
+          user: newuser,
+        });
+      } catch (error) {
+        await User.findByIdAndDelete(newuser._id);
+
+        console.log("error in create stream user", error);
+      }
 
       // TODO : create a user in stream too [use $transactions]
 
