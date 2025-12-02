@@ -42,26 +42,8 @@ export const authControllers = {
         profilePic: randomAvatar,
       });
 
-      try {
-        await createStreamUser({
-          id: newuser._id.toString(),
-          name: newuser.fullName,
-          image: newuser.profilePic,
-        });
 
-        return res.status(201).json({
-          message: "User added to stream successfully",
-          user: newuser,
-        });
-      } catch (error) {
-        await User.findByIdAndDelete(newuser._id);
-
-        console.log("error in create stream user", error);
-      }
-
-      // TODO : create a user in stream too [use $transactions]
-
-      const token = jwt.sign({ userId: newuser._id }, process.env.JWT_SECRET, {
+       const token = jwt.sign({ userId: newuser._id }, process.env.JWT_SECRET, {
         expiresIn: "7d",
       });
 
@@ -72,7 +54,27 @@ export const authControllers = {
         secure: process.env.NODE_ENV === "production",
       });
 
-      res.status(201).json({
+
+      try {
+        await createStreamUser({
+          id: newuser._id.toString(),
+          name: newuser.fullName,
+          image: newuser.profilePic,
+        });
+
+     return  res.status(201).json({
+          message: "User added to stream successfully",
+          user: newuser,
+          token,
+        });
+      } catch (error) {
+        await User.findByIdAndDelete(newuser._id);
+
+        console.log("error in create stream user", error);
+      }
+
+     
+       res.status(201).json({
         message: "User registered successfully",
         user: newuser,
         token,
