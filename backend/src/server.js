@@ -6,12 +6,17 @@ dotenv.config();
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 5000;
 
 //routes
 app.get("/", (req, res) => {
   res.status(200).json({ message: "server is running ✅" });
 });
+
+app.use("/api/auth", authRouter);
 
 //start server after DB connection
 const startServer = async () => {

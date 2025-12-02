@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     await mongoose
-      .connect(process.env.MONGO_URI)
+      .connect("mongodb://localhost:27017/gabber-chat-app")
       .then(() => {
         console.log("MongoDB connected successfully ✅");
       })
