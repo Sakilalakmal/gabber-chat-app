@@ -3,11 +3,14 @@ import dotenv from "dotenv";
 import authRouter from "./routes/auth-routes.js";
 import connectDB from "./lib/db.js";
 dotenv.config();
+import cookieParser from "cookie-parser";
+import onBoardingRouter from "./routes/user-onboarding-router.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 5000;
 
@@ -17,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/auth/user", onBoardingRouter);
 
 //start server after DB connection
 const startServer = async () => {
