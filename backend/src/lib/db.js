@@ -2,8 +2,10 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
+    const mongoURI =
+      process.env.MONGODB_URI || "mongodb://localhost:27017/gabber-chat-app";
     await mongoose
-      .connect("mongodb://localhost:27017/gabber-chat-app")
+      .connect(mongoURI)
       .then(() => {
         console.log("MongoDB connected successfully ✅");
       })
