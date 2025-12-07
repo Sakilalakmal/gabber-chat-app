@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev":"nodemon -L src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "lint": "eslint src/**/*.js"
   },
   "type": "module",
   "keywords": [],
@@ -22,5 +23,11 @@
     "mongoose": "^8.13.2",
     "nodemon": "^3.1.9",
     "stream-chat": "^8.60.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.5.0"
   }
 }
