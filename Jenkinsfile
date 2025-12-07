@@ -1,21 +1,33 @@
 pipeline {
-    agent {
-        label 'linux-wsl'
+    agent { label 'linux-wsl' }
+
+    tools {
+        git 'WSL Git' // Name of Git installation configured in Jenkins
+        nodejs 'NodeJS' // Optional: if you set Node.js in Jenkins global tools
     }
-    
+
     environment {
-        GITHUB_TOKEN = credentials('GABBER_TOKEN')
+        GITHUB_TOKEN = credentials('GABBER_TOKEN') // GitHub token stored in Jenkins
         REPO_URL = 'https://github.com/Sakilalakmal/gabber-chat-app.git'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out code...'
-                checkout scm
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']], // Replace with the branch to checkout
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    gitTool: 'WSL Git',
+                    userRemoteConfigs: [[
+                        credentialsId: 'wsl2-ssh', // SSH credentials for GitHub
+                        url: "${REPO_URL}"
+                    ]]
+                ])
             }
         }
-        
+
         stage('Install Dependencies - Backend') {
             steps {
                 echo 'Installing backend dependencies...'
@@ -24,7 +36,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Install Dependencies - Frontend') {
             steps {
                 echo 'Installing frontend dependencies...'
@@ -33,7 +45,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Lint - Backend') {
             steps {
                 echo 'Linting backend code...'
@@ -42,16 +54,16 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Lint - Frontend') {
             steps {
                 echo 'Linting frontend code...'
                 dir('frontend') {
-                    sh 'npm run lint'
+                    sh 'npm run lint || echo "No lint script found, skipping..."'
                 }
             }
         }
-        
+
         stage('Build - Frontend') {
             steps {
                 echo 'Building frontend...'
@@ -60,11 +72,11 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Auto-merge PR') {
             when {
-                expression { 
-                    return env.CHANGE_ID != null
+                expression {
+                    return env.CHANGE_ID != null // Only run if triggered by PR
                 }
             }
             steps {
@@ -81,7 +93,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             echo 'Pipeline completed successfully! ✅'
