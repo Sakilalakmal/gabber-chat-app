@@ -59,7 +59,7 @@ const SignUpPage = () => {
                 <div>
                   <h2 className="text-xl font-semibold">Join with kouventa</h2>
                   <p className="text-sm opacity-70">
-                    Create an account to connect with awesome people
+                    Create an account to connect with awesome peoplea and make new friends.
                   </p>
                 </div>
 
