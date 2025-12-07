@@ -1,3 +1,5 @@
+//create a Jenkins pipeline for a Node.js project with frontend and backend directories
+
 pipeline {
     agent any
     
