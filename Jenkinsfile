@@ -69,7 +69,7 @@ pipeline {
             }
         }
 
-        
+        //auto merge logci
         stage('Auto-merge PR') {
             when {
                 expression { 
