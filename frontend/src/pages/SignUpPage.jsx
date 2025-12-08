@@ -59,7 +59,8 @@ const SignUpPage = () => {
                 <div>
                   <h2 className="text-xl font-semibold">Join with kouventa</h2>
                   <p className="text-sm opacity-70">
-                    Create an account to connect with awesome peoplea and make new friends.
+                    Create an account to connect with awesome peoplea and make
+                    new friends.
                   </p>
                 </div>
 
@@ -151,13 +152,15 @@ const SignUpPage = () => {
                 </div>
 
                 <button className="btn btn-primary w-full" type="submit">
-                  {isPending ? (<>
-                  <Loader className="size-4 animate-spin"/>
-                  Joining ...
-                  </>) : (
+                  {isPending ? (
                     <>
-                    <MessageCircle className="size-4"/>
-                    Join kouventa
+                      <Loader className="size-4 animate-spin" />
+                      Joining ...
+                    </>
+                  ) : (
+                    <>
+                      <MessageCircle className="size-4" />
+                      Join kouventa
                     </>
                   )}
                 </button>
