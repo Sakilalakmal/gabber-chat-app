@@ -10,9 +10,13 @@ import OnBoardongPage from "./pages/OnBoardongPage.jsx";
 import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader.jsx";
 import { useAuthUser } from "./hook/useAuthUser.js";
+import Layout from "./components/Layout.jsx";
+import { useThemeStore } from "./store/useThemeStore.js";
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
+
+  const { theme } = useThemeStore();
 
   if (isLoading) return <PageLoader />;
 
@@ -20,13 +24,15 @@ const App = () => {
   const isOnboardingComplete = authUser?.isOnboarded;
 
   return (
-    <div className="h-screen w-screen " data-theme="night">
+    <div className="h-screen w-screen " data-theme={theme}>
       <Routes>
         <Route
           path="/"
           element={
             isAuthenticated && isOnboardingComplete ? (
-              <HomePage />
+              <Layout showSideBar={true}>
+                <HomePage />
+              </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
