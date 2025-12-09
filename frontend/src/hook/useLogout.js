@@ -12,7 +12,7 @@ export const useLogOut = () => {
   } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      queryClient.setQueryData(["authUser"], null);
       toast.success("You are log out from kouventa");
     },
     onError: (error) => {
