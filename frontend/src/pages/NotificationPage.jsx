@@ -9,8 +9,13 @@ import {
   UserCheckIcon,
 } from "lucide-react";
 import NoNotificationFounds from "../components/NoNotificationFounds";
+import { useAuthUser } from "../hook/useAuthUser";
 
 const NotificationPage = () => {
+  const { authUser } = useAuthUser();
+  const currentUserFullName = authUser.fullName;
+  console.log(currentUserFullName);
+
   const queryClient = useQueryClient();
 
   const { data: notificationData, isLoading } = useQuery({
@@ -128,8 +133,16 @@ const NotificationPage = () => {
                               {notification.recipient.fullName}
                             </h3>
                             <p className="text-sm my-1">
-                              {notification.recipient.fullName} accepted{" "}
-                              {notification.sender.fullName}'s friend request
+                              {notification.recipient.fullName ===
+                              currentUserFullName
+                                ? "You"
+                                : notification.recipient.fullName}{" "}
+                              accepted{" "}
+                              {currentUserFullName ===
+                              notification.sender.fullName
+                                ? "your"
+                                : notification.sender.fullName}{" "}
+                              friend request
                             </p>
                             <p className="text-xs flex items-center opacity-70">
                               <ClockIcon className="h-3 w-3 mr-1" />
