@@ -10,7 +10,6 @@ import {
   StreamVideoClient,
   useCallStateHooks,
   StreamTheme,
-  name,
   SpeakerLayout,
   CallControls,
 } from "@stream-io/video-react-sdk";
