@@ -11,7 +11,7 @@ export const userControllers = {
       const recommendedUsers = await User.find({
         $and: [
           { _id: { $ne: currentUserId } },
-          { _id: { $nin: currentUser.friends } },
+          { _id: { $nin: currentUser.freinds } },
           { isOnboarded: true },
         ],
       }).select("-password");
@@ -106,11 +106,11 @@ export const userControllers = {
       await freindRequest.save();
 
       await User.findByIdAndUpdate(freindRequest.sender, {
-        $push: { freinds: freindRequest.recipient },
+        $addToSet: { freinds: freindRequest.recipient },
       });
 
       await User.findByIdAndUpdate(freindRequest.recipient, {
-        $push: { freinds: freindRequest.sender },
+        $addToSet: { freinds: freindRequest.sender },
       });
 
       res.status(200).json({ message: "Friend request accepted." });
@@ -128,9 +128,13 @@ export const userControllers = {
       }).populate("sender", "fullName bio profilePic nativeLanguage");
 
       const acceptedRequests = await FriendRequest.find({
-        sender: req.user.id,
-        status: "accepted",
-      }).populate("recipient", "fullName bio profilePic nativeLanguage");
+        $or: [
+          { sender: req.user.id, status: "accepted" },
+          { recipient: req.user.id, status: "accepted" }
+        ]
+      })
+        .populate("sender", "fullName bio profilePic nativeLanguage")
+        .populate("recipient", "fullName bio profilePic nativeLanguage");
 
       res.status(200).json({
         incomingRequests,
