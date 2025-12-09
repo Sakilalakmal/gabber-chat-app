@@ -2,32 +2,19 @@ pipeline {
     agent any
     
     environment {
-        GITHUB_TOKEN = credentials('GABBER_TOKEN')
-        REPO_URL = 'https://github.com/Sakilalakmal/gabber-chat-app.git'
+        // Ensure this ID matches what you saved in Jenkins Credentials
+        GITHUB_TOKEN = credentials('GABBER_TOKEN') 
+        // We don't need REPO_URL anymore, Multibranch handles it
     }
     
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
-                    gitTool: 'Default', // Windows Git configured in Jenkins
-                    userRemoteConfigs: [[
-                        credentialsId: 'windows-ssh', // if using SSH, otherwise leave blank for HTTPS
-                        url: "${REPO_URL}"
-                    ]]
-                ])
-            }
-        }
-        
+        // STAGE 1: REMOVED MANUAL CHECKOUT (Jenkins does this automatically now)
 
         stage('Install Dependencies - Backend') {
             steps {
                 echo 'Installing backend dependencies...'
                 dir('backend') {
+                    // utilizing npm ci for cleaner installs in CI
                     bat 'npm ci'
                 }
             }
@@ -69,16 +56,17 @@ pipeline {
             }
         }
 
-        //auto merge logci
         stage('Auto-merge PR') {
+            // Only run this stage if it is a Pull Request
             when {
                 expression { 
                     return env.CHANGE_ID != null
                 }
             }
             steps {
-                echo 'All checks passed! Auto-merging PR...'
+                echo "PR Detected: ${env.CHANGE_ID}. Attempting to merge..."
                 script {
+                    // Windows CURL command to merge
                     bat """
                         curl -X PUT ^
                         -H "Authorization: token %GITHUB_TOKEN%" ^
@@ -99,7 +87,6 @@ pipeline {
             echo 'Pipeline failed! ❌'
         }
         cleanup {
-            echo 'Cleaning up workspace...'
             cleanWs()
         }
     }
