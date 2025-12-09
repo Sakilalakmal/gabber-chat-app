@@ -55,3 +55,15 @@ export const sendFreindRequest = async (userId) => {
 
   return response.data;
 };
+
+export const notifications = async () => {
+  const response = await axiosInstance.get("/user/manage/friend-requests");
+  return response.data;
+};
+
+export const acceptFreindRequest = async (userId) => {
+  const response = await axiosInstance.post(
+    `/user/manage/friend-request/${userId}/accept`
+  );
+  return response.data;
+};

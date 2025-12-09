@@ -61,7 +61,13 @@ const App = () => {
         <Route
           path="/notification"
           element={
-            isAuthenticated ? <NotificationPage /> : <Navigate to={"/login"} />
+            isAuthenticated && isOnboardingComplete ? (
+              <Layout showSideBar={true}>
+                <NotificationPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
           }
         />
         <Route
