@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import onBoardingRouter from "./routes/user-onboarding-router.js";
 import chatRouter from "./routes/chat-route.js";
 import cors from "cors";
+import userRouter from "./routes/user-routes.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/auth/user", onBoardingRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/user/manage", userRouter);
 
 //start server after DB connection
 const startServer = async () => {
