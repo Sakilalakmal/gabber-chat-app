@@ -26,8 +26,8 @@ export const userControllers = {
   getFreinds: async (req, res) => {
     try {
       const user = await User.findById(req.user.id)
-        .select(" freinds")
-        .populate(" freinds", "fullName bio  profilePic   nativeLanguage");
+        .select("freinds")
+        .populate("freinds", "fullName bio profilePic nativeLanguage");
 
       res.status(200).json({ friends: user.freinds });
     } catch (error) {
@@ -144,12 +144,12 @@ export const userControllers = {
 
   alreadySentRequest: async (req, res) => {
     try {
-      const alreadySent = await FriendRequest.findOne({
+      const alreadySent = await FriendRequest.find({
         sender: req.user.id,
         status: "pending",
       }).populate("recipient", "fullName bio profilePic nativeLanguage");
 
-      res.status(200).json({ alreadySent });
+      res.status(200).json({ requests: alreadySent });
     } catch (error) {
       console.error("Error checking existing friend request:", error);
       res.status(500).json({ message: "Internal server error" });
