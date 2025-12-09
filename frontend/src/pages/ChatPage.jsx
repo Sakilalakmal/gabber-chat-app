@@ -4,13 +4,11 @@ import { useAuthUser } from "../hook/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
 import { getStreamToken } from "../lib/api";
 import {
-  useCreateChatClient,
   Chat,
   Channel,
   ChannelHeader,
   MessageInput,
   MessageList,
-  Thread,
   Window,
 } from "stream-chat-react";
 import { StreamChat } from "stream-chat";
