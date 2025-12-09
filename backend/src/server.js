@@ -17,7 +17,11 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: " http://localhost:5173",
+    origin: [
+      "http://localhost:5173", // Allow local Vite dev server
+      "http://localhost", // Allow Docker Frontend (Port 80)
+      "http://localhost:80", // (Optional) Explicit Port 80
+    ],
     credentials: true,
   })
 );

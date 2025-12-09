@@ -18,6 +18,23 @@ services:
       timeout: 5s
       retries: 5
 
+  # Mongo Express - MongoDB Admin Interface
+  mongo-express:
+    image: mongo-express
+    container_name: gabber-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+    depends_on:
+      - mongodb
+    networks:
+      - gabber-network
+
   # Backend API
   backend:
     build:
@@ -29,14 +46,11 @@ services:
       - "5000:5000"
     environment:
       - PORT=5000
-      - MONGODB_URI=mongodb://mongodb:27017/gabber-chat-app
+      - MONGODB_URI=${MONGODB_URI}
       - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
-      - STREAM_API_KEY=${STREAM_API_KEY:-demo-api-key}
-      - STREAM_SECRET_KEY=${STREAM_SECRET_KEY:-demo-secret-key}
+      - STREAM_API_KEY=${STREAM_API_KEY}
+      - STREAM_SECRET_KEY=${STREAM_SECRET_KEY}
       - NODE_ENV=development
-    depends_on:
-      mongodb:
-        condition: service_healthy
     networks:
       - gabber-network
     volumes:
@@ -53,6 +67,8 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+    environment:
+      - VITE_STREAM_API_KEY=${VITE_STREAM_API_KEY}
     depends_on:
       - backend
     networks:
