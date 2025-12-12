@@ -130,8 +130,8 @@ export const userControllers = {
       const acceptedRequests = await FriendRequest.find({
         $or: [
           { sender: req.user.id, status: "accepted" },
-          { recipient: req.user.id, status: "accepted" }
-        ]
+          { recipient: req.user.id, status: "accepted" },
+        ],
       })
         .populate("sender", "fullName bio profilePic nativeLanguage")
         .populate("recipient", "fullName bio profilePic nativeLanguage");
@@ -156,6 +156,41 @@ export const userControllers = {
       res.status(200).json({ requests: alreadySent });
     } catch (error) {
       console.error("Error checking existing friend request:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  // Update user's language preferences for translation
+  updateLanguagePreferences: async (req, res) => {
+    try {
+      const { preferredLanguage, autoTranslate } = req.body;
+      const userId = req.user.id;
+
+      // Build update object with only provided fields
+      const updateData = {};
+      if (preferredLanguage !== undefined) {
+        updateData.preferredLanguage = preferredLanguage;
+      }
+      if (autoTranslate !== undefined) {
+        updateData.autoTranslate = autoTranslate;
+      }
+
+      // Update user preferences
+      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+        new: true,
+        select: "-password",
+      });
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json({
+        message: "Language preferences updated successfully",
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error("Error updating language preferences:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   },

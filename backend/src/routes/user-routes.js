@@ -21,4 +21,10 @@ userRouter.get("/friend-requests", userControllers.getFreindrequests);
 
 userRouter.get("/already-sent-requests", userControllers.alreadySentRequest);
 
+// Update language preferences for translation
+userRouter.patch(
+  "/language-preferences",
+  userControllers.updateLanguagePreferences
+);
+
 export default userRouter;

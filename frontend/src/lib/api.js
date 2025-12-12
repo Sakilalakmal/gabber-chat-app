@@ -72,3 +72,36 @@ export const getStreamToken = async () => {
   const response = await axiosInstance.get("/chat/token");
   return response.data;
 };
+
+// Translation API functions
+export const translateMessage = async (text, targetLang, sourceLang = "en") => {
+  const response = await axiosInstance.post("/translate", {
+    text,
+    targetLang,
+    sourceLang,
+  });
+  return response.data;
+};
+
+export const detectLanguage = async (text) => {
+  const response = await axiosInstance.post("/translate/detect", { text });
+  return response.data;
+};
+
+export const getSupportedLanguages = async () => {
+  const response = await axiosInstance.get("/translate/languages");
+  return response.data;
+};
+
+export const updateLanguagePreferences = async (preferences) => {
+  const response = await axiosInstance.patch(
+    "/user/manage/language-preferences",
+    preferences
+  );
+  return response.data;
+};
+
+export const getTranslationCacheStats = async () => {
+  const response = await axiosInstance.get("/translate/cache-stats");
+  return response.data;
+};
