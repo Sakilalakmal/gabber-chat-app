@@ -43,6 +43,15 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    // Translation preferences
+    preferredLanguage: {
+      type: String,
+      default: "en", // Language user wants to READ messages in
+    },
+    autoTranslate: {
+      type: Boolean,
+      default: false, // Whether to automatically translate incoming messages
+    },
   },
   { timestamps: true }
 );

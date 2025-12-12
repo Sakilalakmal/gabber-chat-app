@@ -9,8 +9,10 @@ import {
   MapPinIcon,
   RecycleIcon,
   ShuffleIcon,
+  Languages,
+  Camera as CameraIcon,
 } from "lucide-react";
-import { LANGUAGES } from "../constants/languages";
+import { LANGUAGE_OPTIONS } from "../constants/languages";
 
 const OnBoardongPage = () => {
   const queryClient = useQueryClient();
@@ -21,6 +23,8 @@ const OnBoardongPage = () => {
     nativeLanguage: authUser?.nativeLanguage || "",
     location: authUser?.location || "",
     profilePic: authUser?.profilePic || "",
+    preferredLanguage: authUser?.preferredLanguage || "en",
+    autoTranslate: authUser?.autoTranslate || false,
   });
 
   const { mutate: onBoardingMutation, isPending } = useMutation({
@@ -130,11 +134,11 @@ const OnBoardongPage = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Learning Language</span>
+                <span className="label-text">Native Language</span>
               </label>
               <select
-                name="learningLanguage"
-                value={formState.learningLanguage}
+                name="nativeLanguage"
+                value={formState.nativeLanguage}
                 onChange={(e) =>
                   setFormState({
                     ...formState,
@@ -143,10 +147,10 @@ const OnBoardongPage = () => {
                 }
                 className="select select-bordered w-full"
               >
-                <option value="">Select Your language</option>
-                {LANGUAGES.map((lang) => (
-                  <option key={`learning-${lang}`} value={lang.toLowerCase()}>
-                    {lang}
+                <option value="">Select your native language</option>
+                {LANGUAGE_OPTIONS.map((lang) => (
+                  <option key={`native-${lang.code}`} value={lang.code}>
+                    {lang.name}
                   </option>
                 ))}
               </select>
@@ -170,6 +174,65 @@ const OnBoardongPage = () => {
                 />
               </div>
             </div>
+
+            {/* Translation Preferences Section */}
+            <div className="divider">
+              <Languages className="size-5 inline mr-2" />
+              Translation Preferences
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Preferred Reading Language</span>
+                <span className="label-text-alt text-xs opacity-70">
+                  Language you want to see messages in
+                </span>
+              </label>
+              <select
+                name="preferredLanguage"
+                value={formState.preferredLanguage}
+                onChange={(e) =>
+                  setFormState({
+                    ...formState,
+                    preferredLanguage: e.target.value,
+                  })
+                }
+                className="select select-bordered w-full"
+              >
+                {LANGUAGE_OPTIONS.map((lang) => (
+                  <option key={`preferred-${lang.code}`} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-control">
+              <label className="label cursor-pointer justify-start gap-4">
+                <input
+                  type="checkbox"
+                  name="autoTranslate"
+                  checked={formState.autoTranslate}
+                  onChange={(e) =>
+                    setFormState({
+                      ...formState,
+                      autoTranslate: e.target.checked,
+                    })
+                  }
+                  className="checkbox checkbox-primary"
+                />
+                <div className="flex flex-col">
+                  <span className="label-text font-medium">
+                    Enable Auto-Translate
+                  </span>
+                  <span className="label-text-alt opacity-70">
+                    Automatically translate incoming messages to your preferred
+                    language
+                  </span>
+                </div>
+              </label>
+            </div>
+
             <button
               className="btn btn-primary w-full"
               disabled={isPending}
