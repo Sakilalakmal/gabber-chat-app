@@ -1,3 +1,5 @@
+<img width="1475" height="675" alt="gabber-chat-app" src="https://github.com/user-attachments/assets/9e78a1dc-8294-4bd1-99f5-0d8022fdc812" />
+
 # Gabber Chat App - Real-Time Messaging Platform
 Gabber is a modern, feature-rich messaging application designed to bridge communication gaps with real-time chat, video calling, and instant translation. Built with the MERN stack and powered by cutting-edge services, it offers a seamless and secure communication experience for users worldwide.
 
